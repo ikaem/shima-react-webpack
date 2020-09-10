@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-ki
+import "./assets/styles/main.css";
 
-const App = () => {
-  return <div>Hello React and TypeScript! { boom }</div>;
-};
+import App from "./app";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(
+  <App />,
+  document.getElementById("root")
+);

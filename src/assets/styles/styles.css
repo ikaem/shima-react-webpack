@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.custom-scrollbar::-webkit-scrollbar {
+  @apply w-1;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-white;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-gray-600;
+}
+
+.message-list_message-item::before {
+  content: "";
+  width: 8px;
+  height: 13px;
+  color: green;
+  position: absolute;
+  top: 0px;
+  right: -8px;
+  background-image: url("../images/caret.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  /* background-attachment: fixed; */
+  color: blue;
+}
+
+.message-list_message-item:nth-child(even)::before {
+  left: -8px;
+  transform: rotateY(180deg);
+  background-image: url("../images/caret-white.svg");
+}
