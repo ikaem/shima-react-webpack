@@ -2,17 +2,17 @@ import React from "react";
 
 const HeaderSearch: React.FC = () => {
   return (
-    <form className="main-header_search-contacts-form bg-gray-100 h-12 w-full px-4 flex flex-row-reverse items-center relative">
-      <label htmlFor="" className="search-contacts-form_label" hidden>
+    <form className="bg-gray-100 h-12 w-full px-4 flex flex-row-reverse items-center relative">
+      <label htmlFor="" className="" hidden>
         Search
       </label>
       <input
         type="search"
-        className="search-contacts-form_input w-full rounded-tr-app-search rounded-br-app-search h-8 outline-none"
+        className="w-full rounded-tr-app-search rounded-br-app-search h-8 outline-none"
       />
-      <button className="search-contacts-form_submit-btn bg-white h-8 rounded-tl-app-search rounded-bl-app-search pl-2 relative">
+      <button className="bg-white h-8 rounded-tl-app-search rounded-bl-app-search pl-2 relative">
         <svg
-          className="w-6 h-6 relative text-gray-500"
+          className="h-6 w-6 relative text-gray-500"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

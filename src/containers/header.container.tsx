@@ -5,7 +5,7 @@ import HeaderSearch from "../components/header-search.component";
 
 const Header: React.FC = () => {
   return (
-    <header>
+    <header className="flex flex-col">
       <HeaderNavigation />
       <HeaderSearch />
     </header>

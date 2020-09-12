@@ -1,13 +1,24 @@
 import React from "react";
 
-const CommunicationMessage: React.FC = () => {
+export interface CommunicationMessageProps {
+  name: string;
+  content: string;
+}
+
+const CommunicationMessage: React.FC<CommunicationMessageProps> = ({
+  name,
+  content,
+}) => {
   return (
-    <li className="message-list_message-item self-start p-2 rounded-lg rounded-tl-none bg-white shadow relative mb-3 flex flex-col">
-      <p className="message-item_message-content text-sm text-gray-900">
-        Hello, this is my message
-      </p>
-      <div className="message-item_message-context text-xs mt-2 self-end text-gray-600 flex place-items-center">
-        <span className="message-context_time">13:33</span>
+    // <li className="message-list_message-item">
+    <li
+      className={`my-message ${
+        name !== "kaem" && name !== "admin" && "other-user-message"
+      } ${name === "admin" && "admin-user-message"}`}
+    >
+      <p className="text-sm text-gray-900">{content}</p>
+      <div className="text-xs mt-2 self-end text-gray-600 flex place-items-center">
+        <span className="">{"22/08/2020"}</span>
         <svg
           className="w-5 h-5 inline text-blue-400"
           fill="none"

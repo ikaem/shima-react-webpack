@@ -2,7 +2,7 @@ import React from "react";
 
 const CommunicationNewMessage: React.FC = () => {
   return (
-    <form className="communication-container_new-message-form mt-auto pl-2 pr-4 py-2 h-16 flex items-center justify-center">
+    <form className="mt-auto pl-2 pr-4 py-2 h-16 flex items-center justify-center">
       <label htmlFor="" hidden>
         New message
       </label>
