@@ -21302,20 +21302,82 @@ video {
           animation: bounce 1s infinite;
 }
 
+body {
+  --bg-opacity: 1;
+  background-color: #e2e8f0;
+  background-color: rgba(226, 232, 240, var(--bg-opacity));
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 0.25rem;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
   --bg-opacity: 1;
-  background-color: #fff;
-  background-color: rgba(255, 255, 255, var(--bg-opacity));
+  background-color: #edf2f7;
+  background-color: rgba(237, 242, 247, var(--bg-opacity));
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   --bg-opacity: 1;
   background-color: #718096;
   background-color: rgba(113, 128, 150, var(--bg-opacity));
+}
+
+.message-list_message-item {
+  align-self: flex-end;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border-top-right-radius: 0;
+  --bg-opacity: 1;
+  background-color: #c6f6d5;
+  background-color: rgba(198, 246, 213, var(--bg-opacity));
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  position: relative;
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-list_message-item:nth-child(even) {
+  align-self: flex-start;
+  border-radius: 0.5rem;
+  border-top-left-radius: 0;
+  --bg-opacity: 1;
+  background-color: #fff;
+  background-color: rgba(255, 255, 255, var(--bg-opacity));
+}
+
+.my-message {
+  align-self: flex-end;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border-top-right-radius: 0;
+  --bg-opacity: 1;
+  background-color: #c6f6d5;
+  background-color: rgba(198, 246, 213, var(--bg-opacity));
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  position: relative;
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.other-user-message {
+  align-self: flex-start;
+  border-radius: 0.5rem;
+  border-top-left-radius: 0;
+  --bg-opacity: 1;
+  background-color: #fff;
+  background-color: rgba(255, 255, 255, var(--bg-opacity));
+}
+
+.admin-user-message {
+  align-self: center;
+  border-radius: 0.5rem;
+  --bg-opacity: 1;
+  background-color: #f6e05e;
+  background-color: rgba(246, 224, 94, var(--bg-opacity));
 }
 
 .message-list_message-item::before {
@@ -21329,7 +21391,6 @@ video {
   background-image: url("../images/caret.svg");
   background-repeat: no-repeat;
   background-position: center;
-  /* background-attachment: fixed; */
   color: blue;
 }
 

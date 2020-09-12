@@ -2,19 +2,14 @@ import React from "react";
 
 const HeaderNavigation: React.FC = () => {
   return (
-    <nav className="main-header_navigation flex flex-col sm:flex-row sm:h-16 items-center px-4 pt-3 sm:pt-0 justify-between">
-
-      <p className="hello">
-        Helo this text
-      </p>
-
+    <nav className="flex flex-col sm:flex-row sm:h-16 items-center px-4 pt-3 sm:pt-0 justify-between">
       <a
         href="#"
-        className="navigation_avatar-container w-10 h-10 rounded-full overflow-hidden"
+        className="w-10 h-10 rounded-full overflow-hidden"
       >
         <img src="https://via.placeholder.com/100" alt="" className="w-full" />
       </a>
-      <a href="#" className="navigation_new-communication my-4 text-gray-600">
+      <a href="#" className="my-4 text-gray-600">
         <svg
           className="w-6 h-6"
           fill="none"

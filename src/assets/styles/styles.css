@@ -2,16 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply bg-gray-300;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   @apply w-1;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  @apply bg-white;
+  @apply bg-gray-200;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   @apply bg-gray-600;
+}
+
+.message-list_message-item {
+  @apply self-end p-2 rounded-lg rounded-tr-none bg-green-200 shadow relative mb-3 flex flex-col;
+}
+
+.message-list_message-item:nth-child(even) {
+  @apply self-start rounded-lg rounded-tl-none bg-white;
+}
+
+.my-message {
+  @apply self-end p-2 rounded-lg rounded-tr-none bg-green-200 shadow relative mb-3 flex flex-col;
+}
+
+.other-user-message {
+  @apply self-start rounded-lg rounded-tl-none bg-white;
+}
+
+.admin-user-message {
+  @apply self-center rounded-lg bg-yellow-400;
 }
 
 .message-list_message-item::before {
@@ -25,7 +49,6 @@
   background-image: url("../images/caret.svg");
   background-repeat: no-repeat;
   background-position: center;
-  /* background-attachment: fixed; */
   color: blue;
 }
 
