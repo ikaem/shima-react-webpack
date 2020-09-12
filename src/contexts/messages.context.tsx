@@ -3,6 +3,7 @@ import io from "socket.io-client";
 
 export const MessagesContext = createContext<{
   getRoomMessages: () => { room: string; name: string; content: string }[];
+  getRoomMessagesObject: (a: string) => { name: string; content: string }[];
   communicationList: {
     room: string;
     lastMessage: {
@@ -36,17 +37,31 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
     { name: string; content: string; room: string }[]
   >([]);
 
-  // setting state for communication objects...
-  const [communicationObjects, setCommunicationObjects] = useState<
-    { room: string; messages: { name: string; content: string }[] }[]
-  >([]);
-
   const getRoomMessages = (room = "lobby") => {
     const roomMessages = communication.filter((message) => {
       return message.room === room;
     });
 
     return roomMessages;
+  };
+
+  // setting state for communication objects...
+  const [communicationObjects, setCommunicationObjects] = useState<
+    { room: string; messages: { name: string; content: string }[] }[]
+  >([]);
+
+  const getRoomMessagesObject = (room: string) => {
+    const roomMessages = communicationObjects.find((object) => {
+      return object.room === room;
+    }) as {
+      room: string;
+      messages: {
+        name: string;
+        content: string;
+      }[];
+    };
+
+    return roomMessages.messages;
   };
 
   // just random name creator
@@ -127,21 +142,23 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
       return [...prevObjects, ...commObjects];
     });
 
-    commObjects.forEach(({room}) => {
-      console.log("is socket end curren true:",socketRef.current)
+    commObjects.forEach(({ room }) => {
+      // console.log("is socket end curren true:",socketRef.current)
 
       // join room on backend
-      socketRef.current && socketRef.current.emit(
-        "join",
-        { name: `kaem${randomizer()}`, room: room },
-        (data: { error: string }) => console.log("this is the error:", data)
-      );
+      socketRef.current &&
+        socketRef.current.emit(
+          "join",
+          { name: `kaem${randomizer()}`, room: room },
+          (data: { error: string }) => console.log("this is the error:", data)
+        );
     });
   }, []);
 
   return (
     <MessagesContext.Provider
       value={{
+        getRoomMessagesObject,
         getRoomMessages,
         communicationList: communicationObjects.map((commObj) => {
           return {

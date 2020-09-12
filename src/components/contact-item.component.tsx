@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface ContactItemProps {
   room: string;
@@ -19,7 +20,10 @@ const ContactItem: React.FC<ContactItemProps> = ({ room, lastMessage }) => {
         />
       </div>
       <div className="sm:flex flex-wrap ml-4 w-4/6 items-center hidden">
-        <span className="">{room}</span>
+        <Link to={`/room/${room}`}>
+          <span className="">{room}</span>
+        </Link>
+
         <span className="text-xs ml-auto text-gray-500"> Yesterday </span>
         <p className="text-sm text-gray-600">
           {lastMessage.author}: {lastMessage.content}
