@@ -1,6 +1,14 @@
 import React from "react";
 
-const ContactItem: React.FC = () => {
+interface ContactItemProps {
+  room: string;
+  lastMessage: {
+    author: string;
+    content: string;
+  };
+}
+
+const ContactItem: React.FC<ContactItemProps> = ({ room, lastMessage }) => {
   return (
     <li className="flex justify-start py-4 border-b w-full">
       <div className="w-12">
@@ -11,13 +19,10 @@ const ContactItem: React.FC = () => {
         />
       </div>
       <div className="sm:flex flex-wrap ml-4 w-4/6 items-center hidden">
-        <span className="">John</span>
-        <span className="text-xs ml-auto text-gray-500">
-          {" "}
-          Yesterday{" "}
-        </span>
+        <span className="">{room}</span>
+        <span className="text-xs ml-auto text-gray-500"> Yesterday </span>
         <p className="text-sm text-gray-600">
-          John: Lorem Ipsum
+          {lastMessage.author}: {lastMessage.content}
         </p>
       </div>
     </li>
