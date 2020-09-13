@@ -4,9 +4,11 @@ import io from "socket.io-client";
 export const MessagesContext = createContext<{
   getRoomMessages: () => { room: string; name: string; content: string }[];
   getRoomMessagesObject: (a: string) => { name: string; content: string }[];
+  setCommObjectRead: (a: string) => void;
   sendMessage: (a: string, b: string) => void;
   communicationList: {
     room: string;
+    seen: boolean;
     lastMessage: {
       author: string;
       content: string;
@@ -48,14 +50,73 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // setting state for communication objects...
   const [communicationObjects, setCommunicationObjects] = useState<
-    { room: string; messages: { name: string; content: string }[] }[]
+    {
+      room: string;
+      seen: boolean;
+      messages: { name: string; content: string }[];
+    }[]
   >([]);
+
+  const setCommObjectRead = (roomName: string) => {
+    // const currentRoom = communicationObjects.find((room) => {
+    //   return room.room === roomName;
+    // });
+
+    // console.log("currentROom", currentRoom);
+
+    // if (!currentRoom) return;
+
+    // const currentRoomIndex = communicationObjects.findIndex((room) => {
+    //   return room.room === roomName;
+    // });
+
+    // console.log("currentRoomIndex", currentRoomIndex)
+
+    // const newCurentRoom = {
+    //   ...currentRoom,
+    //   seen: true,
+    // }
+
+    // setCommunicationObjects(prevObj => {
+    //   const newObjects = [...prevObj];
+    //   newObjects[currentRoomIndex] = newCurentRoom;
+
+    //   return newObjects
+    // })
+
+
+
+    console.log("is this called")
+    setCommunicationObjects((prevObjs) => {
+      const currentRoom = prevObjs.find((room) => {
+        return room.room === roomName;
+      });
+
+      if (!currentRoom) return prevObjs;
+
+      const currentRoomIndex = prevObjs.findIndex((room) => {
+        return room.room === roomName;
+      });
+
+      const newObjects = [...prevObjs];
+
+      newObjects[currentRoomIndex] = {
+        ...currentRoom,
+        seen: true,
+      };
+
+      return newObjects;
+    });
+
+    console.log("commObjects", communicationObjects);
+  };
 
   const getRoomMessagesObject = (room: string) => {
     const roomMessages = communicationObjects.find((object) => {
       return object.room === room;
     }) as {
       room: string;
+      seen: boolean;
       messages: {
         name: string;
         content: string;
@@ -97,7 +158,7 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
       "adminMessage",
       (data: { name: string; content: string; room: string }) => {
         setCommunication((prevMessages) => {
-          console.log("prev messages", prevMessages);
+          // console.log("prev messages", prevMessages);
           return [...prevMessages, data];
         });
 
@@ -111,6 +172,7 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
     const commObjects = [
       {
         room: "random",
+        seen: false,
         messages: [
           { name: "kaem", content: "Hello message" },
           { name: "ted", content: "Hello message 2" },
@@ -119,6 +181,7 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
       },
       {
         room: "mark",
+        seen: false,
         messages: [
           { name: "mark", content: "Hello message" },
           { name: "kaem", content: "Hello message 2" },
@@ -126,22 +189,30 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
       },
       {
         room: "john",
+        seen: false,
         messages: [
           { name: "john", content: "Hello message" },
           { name: "kaem", content: "Hello message 2" },
         ],
       },
-      { room: "bday", messages: [{ name: "angie", content: "Hello message" }] },
+      {
+        room: "bday",
+        seen: false,
+        messages: [{ name: "angie", content: "Hello message" }],
+      },
       {
         room: "football",
+        seen: false,
         messages: [{ name: "john", content: "Hello message" }],
       },
       {
         room: "carry",
+        seen: false,
         messages: [{ name: "carry", content: "Hello message" }],
       },
       {
         room: "angie",
+        seen: false,
         messages: [
           { name: "kaem", content: "Hello message" },
           { name: "angie", content: "Hello message 2" },
@@ -211,26 +282,46 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
       message: { name: string; content: string }
     ) => {
       setCommunicationObjects((prevObjs) => {
-        console.log("inside set objects", prevObjs);
+        // console.log("inside set objects", prevObjs);
 
         const isRoomExist = prevObjs.find((room) => {
-          console.log("this is room object:", room);
-          console.log("what...");
+          // console.log("this is room object:", room);
+          // console.log("what...");
           return room.room === roomName;
         });
 
-        console.log("this is comm objects", prevObjs);
+        // console.log("this is comm objects", prevObjs);
 
-        console.log("is room exist?:", isRoomExist);
+        // console.log("is room exist?:", isRoomExist);
 
         if (!isRoomExist)
-          return [{ room: roomName, messages: [message] }, ...prevObjs];
+          return [
+            { room: roomName, seen: false, messages: [message] },
+            ...prevObjs,
+          ];
 
         const newMessages = [...isRoomExist.messages, message];
         const newObj = {
           room: roomName,
+          seen: false,
           messages: newMessages,
         };
+
+        // finding index here
+        // const objIndex = prevObjs.findIndex((room) => {
+        //   return room.room === roomName;
+        // })
+
+        // returning the same list with comm objects
+
+        // const newComm = prevObjs.slice()
+
+        // newComm[objIndex] = newObj
+        //
+
+        // returning new communicatio
+
+        // return newComm;
 
         const remainingObjs = prevObjs.filter((obj) => {
           return obj.room !== roomName;
@@ -251,10 +342,10 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
             content: string;
           };
         }) => {
-          console.log(
-            "this is the room message coming back from the server:",
-            data
-          );
+          // console.log(
+          //   "this is the room message coming back from the server:",
+          //   data
+          // );
 
           addToCommunicationObjects(data.room, data.message);
         }
@@ -267,9 +358,11 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
         getRoomMessagesObject,
         getRoomMessages,
         sendMessage,
+        setCommObjectRead,
         communicationList: communicationObjects.map((commObj) => {
           return {
             room: commObj.room,
+            seen: commObj.seen,
             lastMessage: {
               author: commObj.messages[commObj.messages.length - 1].name,
               content: commObj.messages[commObj.messages.length - 1].content,
@@ -279,11 +372,6 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
       }}
     >
       {children}
-      <ul>
-        {getRoomMessages().map((message, index) => (
-          <li key={index}>{message.content}</li>
-        ))}
-      </ul>
     </MessagesContext.Provider>
   );
 };
