@@ -9,7 +9,7 @@ const CommunicationMessage: React.FC<CommunicationMessageProps> = ({
   name,
   content,
 }) => {
-  console.log(name);
+  // console.log(name);
 
   return (
     // <li className="message-list_message-item">

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 
 import CommunicationHeader from "../components/communication-header.component";
@@ -9,6 +9,7 @@ import { MessagesContext } from "../contexts/messages.context";
 
 const Communication: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const newMessageRef = useRef<HTMLTextAreaElement>(null);
   const [messages, setMessages] = useState<{ name: string; content: string }[]>(
     []
   );
@@ -21,21 +22,30 @@ const Communication: React.FC = () => {
     getRoomMessagesObject: (a: string) => { name: string; content: string }[];
   };
 
-
+  const { sendMessage } = useContext(MessagesContext) as {
+    sendMessage: (a: string, b: string) => void;
+  };
 
   useEffect(() => {
     try {
-      console.log("hello", getRoomMessagesObject(id));
+      // console.log("hello", getRoomMessagesObject(id));
       setMessages(getRoomMessagesObject(id));
     } catch (error) {
       console.log(error);
     }
 
-  // setMessages(getRoomMessagesObject(id));
-
+    // setMessages(getRoomMessagesObject(id));
   }, [id, getRoomMessagesObject]);
 
-  !messages.length && <p>Loading...</p>
+  const handleNewMessage = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.charCode !== 13 || !newMessageRef.current) return;
+    e.preventDefault();
+    // console.log(newMessageRef.current.value);
+
+
+    sendMessage(id, newMessageRef.current.value);
+    (newMessageRef.current as HTMLTextAreaElement).value = "";
+  };
 
   return (
     <main className="row-span-2 flex flex-col h-full">
@@ -43,30 +53,23 @@ const Communication: React.FC = () => {
 
       <div className="custom-scrollbar overflow-y-scroll bg-message-box-pattern h-full w-full p-4">
         <ul className="w-full flex flex-col justify-start sm:w-10/12 sm:mx-auto">
-          {/* {new Array(6).fill("").map((val, index) => (
-            <CommunicationMessage key={index} />
-          ))} */}
-
-          {/* {getRoomMessages().map((val, index) => (
-            <CommunicationMessage
-              name={val.name}
-              content={val.content}
-              key={index}
-            />
-          ))} */}
-
           {messages.map((val, index) => {
-            console.log("this is messages:", messages)
-            return <CommunicationMessage
-              name={val.name}
-              content={val.content}
-              key={index}
-            />;
+            // console.log("this is messages:", messages);
+            return (
+              <CommunicationMessage
+                name={val.name}
+                content={val.content}
+                key={index}
+              />
+            );
           })}
         </ul>
       </div>
 
-      <CommunicationNewMessage />
+      <CommunicationNewMessage
+        newMessageRef={newMessageRef}
+        handleNewMessage={handleNewMessage}
+      />
     </main>
   );
 };
