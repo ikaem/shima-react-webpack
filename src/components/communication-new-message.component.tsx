@@ -1,8 +1,19 @@
-import React from "react";
+import React, { RefObject } from "react";
 
-const CommunicationNewMessage: React.FC = () => {
+interface CommunicationNewMessageProps {
+  newMessageRef: RefObject<HTMLTextAreaElement>;
+  handleNewMessage: (a: React.KeyboardEvent<HTMLFormElement>) => void;
+}
+
+const CommunicationNewMessage: React.FC<CommunicationNewMessageProps> = ({
+  newMessageRef,
+  handleNewMessage
+}) => {
   return (
-    <form className="mt-auto pl-2 pr-4 py-2 h-16 flex items-center justify-center">
+    <form
+      onKeyPress={handleNewMessage}
+      className="mt-auto pl-2 pr-4 py-2 h-16 flex items-center justify-center"
+    >
       <label htmlFor="" hidden>
         New message
       </label>
@@ -10,9 +21,11 @@ const CommunicationNewMessage: React.FC = () => {
         name=""
         id=""
         cols={30}
-        rows={1}
+        rows={2}
         placeholder="Write a message"
         className="custom-scrollbar h-full w-full rounded-full p-3 text-gray-800 outline-none"
+        ref={newMessageRef}
+        style={{resize: "none"}}
       />
     </form>
   );

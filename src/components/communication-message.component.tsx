@@ -9,8 +9,11 @@ const CommunicationMessage: React.FC<CommunicationMessageProps> = ({
   name,
   content,
 }) => {
+  // console.log(name);
+
   return (
     // <li className="message-list_message-item">
+
     <li
       className={`my-message ${
         name !== "kaem" && name !== "admin" && "other-user-message"

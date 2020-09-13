@@ -3,7 +3,7 @@ import webpack from "webpack";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
-const config: webpack.Configuration = {
+const config = {
   entry: "./src/index.tsx",
   module: {
     rules: [
@@ -47,7 +47,10 @@ const config: webpack.Configuration = {
     contentBase: path.join(__dirname, "build"),
     compress: true,
     port: 4000,
+    historyApiFallback: true,
   },
+
+  // devServer: {},
   plugins: [
     new ForkTsCheckerWebpackPlugin({
       async: false,
@@ -55,10 +58,6 @@ const config: webpack.Configuration = {
         files: "./src/**/*.{ts,tsx,js,jsx}",
       },
     }),
-    // new MiniCssExtractPlugin({
-    //   filename: "./src/assets/styles/main1.css",
-    // }),
-    // new MiniCssExtractPlugin()
   ],
 };
 

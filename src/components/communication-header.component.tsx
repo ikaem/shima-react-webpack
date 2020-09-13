@@ -1,6 +1,12 @@
 import React from "react";
 
-const CommunicationHeader: React.FC = () => {
+interface CommunicationHeaderProps {
+  roomName: string;
+}
+
+const CommunicationHeader: React.FC<CommunicationHeaderProps> = ({
+  roomName,
+}) => {
   return (
     <header className="px-4 py-2 border-l min-h-comm-header-height flex items-center">
       <a href="#" className="w-10 h-10 rounded-full overflow-hidden">
@@ -8,7 +14,7 @@ const CommunicationHeader: React.FC = () => {
       </a>
 
       <div className="flex flex-col justify-center ml-4">
-        <span className="">John</span>
+        <span className="">{roomName}</span>
         <span className="text-xs text-gray-700">Last seen today at 13:33</span>
       </div>
 
