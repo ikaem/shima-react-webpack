@@ -1,7 +1,11 @@
 import React, { useRef, useState } from "react";
 import { Redirect } from "react-router-dom";
 
-const Login: React.FC = () => {
+interface JoinProps {
+  setLoggedUser: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const Join: React.FC<JoinProps> = ({ setLoggedUser }) => {
   const loginInputRef = useRef<HTMLInputElement>(null);
   const [isUserJoined, setIsUserJoined] = useState<{
     status: boolean;
@@ -38,6 +42,8 @@ const Login: React.FC = () => {
           status: false,
           errorMessage: message,
         });
+
+      setLoggedUser(username);
 
       setIsUserJoined({
         status: true,
@@ -82,4 +88,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Join;

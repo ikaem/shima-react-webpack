@@ -1,29 +1,28 @@
-import React from "react";
-
-import Layout from "./components/layout.component";
+import React, { useState } from "react";
 import MessagesProvider from "./contexts/messages.context";
 
-import Login from "./pages/login.page";
+import Layout from "./components/layout.component";
+
+import Join from "./pages/join.page";
 import Chat from "./pages/chat.page";
 import { Switch, Route } from "react-router-dom";
 
 const App: React.FC = () => {
+  const [loggedUser, setLoggedUser] = useState<string>("");
+
   return (
-    <MessagesProvider>
-      <Layout>
-        <Switch>
-          <Route path="/" exact>
-            <Login />
-          </Route>
-          <Route path="/chat">
+    <Layout>
+      <Switch>
+        <Route path="/join" exact>
+          <Join setLoggedUser={setLoggedUser} />
+        </Route>
+        <Route path="/chat">
+          <MessagesProvider loggedUser={loggedUser}>
             <Chat />
-          </Route>
-          <Route path="/new-room">
-            <Login />
-          </Route>
-        </Switch>
-      </Layout>
-    </MessagesProvider>
+          </MessagesProvider>
+        </Route>
+      </Switch>
+    </Layout>
   );
 };
 
