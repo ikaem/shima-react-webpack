@@ -32,7 +32,8 @@ const ContactItem: React.FC<ContactItemProps> = ({
   // console.log("this stuff loaded", stuff);
 
   useEffect(() => {
-    const param = pathname.split("/")[2];
+    const param = pathname.split("/")[3];
+
     param === room && setCommObjectRead(room);
     // param === room && console.log(room, "is seen:", seen);
     // console.log("pathname changed to", pathname);
@@ -50,7 +51,7 @@ const ContactItem: React.FC<ContactItemProps> = ({
         />
       </div>
       <div className="sm:flex justify-start flex-wrap ml-4 w-4/6 items-center hidden">
-        <Link to={`/room/${room}`}>
+        <Link to={`/chat/room/${room}`}>
           <span className="">{room}</span>
         </Link>
 

@@ -20,7 +20,7 @@ const Contacts: React.FC = () => {
     setCommObjectRead: (a: string) => void;
   };
 
-  console.log("comm list:", communicationList)
+  // console.log("comm list:", communicationList)
 
   return (
     <div className="bg-white custom-scrollbar overflow-y-scroll px-4">
@@ -33,7 +33,7 @@ const Contacts: React.FC = () => {
           // const content = val.lastMessage.content;
           // const author = val.lastMessage.author
 
-          console.log("rendering room:", val.room, "which is seen:", val.seen);
+          // console.log("rendering room:", val.room, "which is seen:", val.seen);
 
           return (
             <ContactItem
