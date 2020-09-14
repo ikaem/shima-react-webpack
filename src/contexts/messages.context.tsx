@@ -2,11 +2,21 @@ import React, { useState, useEffect, useRef, createContext } from "react";
 import io from "socket.io-client";
 
 export const MessagesContext = createContext<{
+  loggedUser: string;
   getRoomMessages: () => { room: string; name: string; content: string }[];
   getRoomMessagesObject: (a: string) => { name: string; content: string }[];
   setCommObjectRead: (a: string) => void;
   sendMessage: (a: string, b: string) => void;
   addNewRoom: (
+    a: string
+  ) => Promise<
+    | {
+        roomName: string;
+        error: string;
+      }
+    | undefined
+  >;
+  joinRoom: (
     a: string
   ) => Promise<
     | {
@@ -149,20 +159,6 @@ const MessagesProvider: React.FC<MessagesProvideProps> = ({
 
     roomName = roomName.trim();
 
-    // let createResponse: {
-    //   newRoom: string;
-    // };
-
-    // socketRef.current.emit(
-    //   "createRoom",
-    //   { name: loggedUser, room: roomName },
-    //   function (response: { newRoom: string }) {
-    //     console.log("response from creating room", response);
-
-    //     createResponse = response;
-    //   }
-    // );
-
     const createResponse: {
       roomName: string;
       error: string;
@@ -179,10 +175,15 @@ const MessagesProvider: React.FC<MessagesProvideProps> = ({
     return createResponse;
   };
 
-  // just random name creator
-  // const randomizer = () => {
-  //   return Date.now();
-  // };
+  const joinRoom = async (roomName: string) => {
+    if (!socketRef.current) return;
+
+    roomName = roomName.trim();
+
+    const joinResponse: { roomName: string, error: string } = await new Promise(resolve => socketRef.current?.emit("join", { name: loggedUser, room: roomName}, (callbackResponse: PromiseLike<{ roomName: string, error: string }> | undefined ) => resolve(callbackResponse)))
+
+    return joinResponse;
+  };
 
   useEffect(() => {
     setCommunication((prev) => [
@@ -427,6 +428,8 @@ const MessagesProvider: React.FC<MessagesProvideProps> = ({
         sendMessage,
         setCommObjectRead,
         addNewRoom,
+        joinRoom,
+        loggedUser,
         communicationList: communicationObjects.map((commObj) => {
           return {
             room: commObj.room,

@@ -26,6 +26,8 @@ const Communication: React.FC = () => {
     sendMessage: (a: string, b: string) => void;
   };
 
+  const { loggedUser } = useContext(MessagesContext) as { loggedUser: string }
+
   useEffect(() => {
     try {
       // console.log("hello", getRoomMessagesObject(id));
@@ -58,6 +60,7 @@ const Communication: React.FC = () => {
             return (
               <CommunicationMessage
                 name={val.name}
+                loggedUser={loggedUser}
                 content={val.content}
                 key={index}
               />

@@ -7,6 +7,7 @@ import Communication from "../containers/communication.container";
 import Contacts from "../containers/contacts.container";
 import NewRoom from "../components/comunication-new-room.component";
 import { Switch, Route, useRouteMatch, Link } from "react-router-dom";
+import JoinRoom from "../components/communication-join-room.component";
 
 const Chat: React.FC = () => {
   console.log(useRouteMatch());
@@ -26,6 +27,9 @@ const Chat: React.FC = () => {
         </Route>
         <Route path={`${path}/new-room`}>
           <NewRoom />
+        </Route>
+        <Route path={`${path}/join-room`}>
+          <JoinRoom />
         </Route>
       </Switch>
       <Contacts />
