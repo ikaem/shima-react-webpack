@@ -2,10 +2,29 @@ import React, { useState, useEffect, useRef, createContext } from "react";
 import io from "socket.io-client";
 
 export const MessagesContext = createContext<{
+  loggedUser: string;
   getRoomMessages: () => { room: string; name: string; content: string }[];
   getRoomMessagesObject: (a: string) => { name: string; content: string }[];
   setCommObjectRead: (a: string) => void;
   sendMessage: (a: string, b: string) => void;
+  addNewRoom: (
+    a: string
+  ) => Promise<
+    | {
+        roomName: string;
+        error: string;
+      }
+    | undefined
+  >;
+  joinRoom: (
+    a: string
+  ) => Promise<
+    | {
+        roomName: string;
+        error: string;
+      }
+    | undefined
+  >;
   communicationList: {
     room: string;
     seen: boolean;
@@ -31,8 +50,14 @@ export const MessagesContext = createContext<{
 
 */
 
-const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
+interface MessagesProvideProps {
+  children: React.ReactNode;
+  loggedUser: string;
+}
+
+const MessagesProvider: React.FC<MessagesProvideProps> = ({
   children,
+  loggedUser,
 }) => {
   const socketRef = useRef<SocketIOClient.Socket>();
 
@@ -84,9 +109,7 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
     //   return newObjects
     // })
 
-
-
-    console.log("is this called")
+    console.log("is this called");
     setCommunicationObjects((prevObjs) => {
       const currentRoom = prevObjs.find((room) => {
         return room.room === roomName;
@@ -128,13 +151,39 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const sendMessage = (room: string, message: string) => {
     message = message.trim();
-    socketRef.current?.emit("message", { name: "kaem", room, message });
+    socketRef.current?.emit("message", { name: loggedUser, room, message });
   };
 
-  // just random name creator
-  // const randomizer = () => {
-  //   return Date.now();
-  // };
+  const addNewRoom = async (roomName: string) => {
+    if (!socketRef.current) return;
+
+    roomName = roomName.trim();
+
+    const createResponse: {
+      roomName: string;
+      error: string;
+    } = await new Promise((resolve) =>
+      socketRef.current?.emit(
+        "createRoom",
+        { name: loggedUser, room: roomName },
+        (
+          response: PromiseLike<{ roomName: string; error: string }> | undefined
+        ) => resolve(response)
+      )
+    );
+
+    return createResponse;
+  };
+
+  const joinRoom = async (roomName: string) => {
+    if (!socketRef.current) return;
+
+    roomName = roomName.trim();
+
+    const joinResponse: { roomName: string, error: string } = await new Promise(resolve => socketRef.current?.emit("join", { name: loggedUser, room: roomName}, (callbackResponse: PromiseLike<{ roomName: string, error: string }> | undefined ) => resolve(callbackResponse)))
+
+    return joinResponse;
+  };
 
   useEffect(() => {
     setCommunication((prev) => [
@@ -149,22 +198,22 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
     // join room on backend
     socketRef.current.emit(
       "join",
-      { name: `kaem`, room: "lobby" },
+      { name: loggedUser, room: "lobby" },
       (data: { error: string }) => console.log("this is the error:", data)
     );
 
-    // listening for events
-    socketRef.current.on(
-      "adminMessage",
-      (data: { name: string; content: string; room: string }) => {
-        setCommunication((prevMessages) => {
-          // console.log("prev messages", prevMessages);
-          return [...prevMessages, data];
-        });
+    // // listening for events
+    // socketRef.current.on(
+    //   "adminMessage",
+    //   (data: { name: string; content: string; room: string }) => {
+    //     setCommunication((prevMessages) => {
+    //       // console.log("prev messages", prevMessages);
+    //       return [...prevMessages, data];
+    //     });
 
-        // console.log("here is a new message", data);
-      }
-    );
+    //     // console.log("here is a new message", data);
+    //   }
+    // );
   }, []);
 
   // just for testing, to assign communication obhects state...
@@ -231,7 +280,7 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
       socketRef.current &&
         socketRef.current.emit(
           "join",
-          { name: `kaem`, room: room },
+          { name: loggedUser, room: room },
           (data: { error: string }) => console.log("this is the error:", data)
         );
     });
@@ -350,6 +399,25 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
           addToCommunicationObjects(data.room, data.message);
         }
       );
+
+    socketRef.current &&
+      socketRef.current.on(
+        "adminMessage",
+        (data: {
+          room: string;
+          message: {
+            name: string;
+            content: string;
+          };
+        }) => {
+          // console.log(
+          //   "this is the room admin message coming back from the server:",
+          //   data
+          // );
+
+          addToCommunicationObjects(data.room, data.message);
+        }
+      );
   }, []);
 
   return (
@@ -359,6 +427,9 @@ const MessagesProvider: React.FC<{ children: React.ReactNode }> = ({
         getRoomMessages,
         sendMessage,
         setCommObjectRead,
+        addNewRoom,
+        joinRoom,
+        loggedUser,
         communicationList: communicationObjects.map((commObj) => {
           return {
             room: commObj.room,

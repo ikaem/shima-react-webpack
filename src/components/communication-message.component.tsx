@@ -3,11 +3,13 @@ import React from "react";
 export interface CommunicationMessageProps {
   name: string;
   content: string;
+  loggedUser: string;
 }
 
 const CommunicationMessage: React.FC<CommunicationMessageProps> = ({
   name,
   content,
+  loggedUser,
 }) => {
   // console.log(name);
 
@@ -16,7 +18,7 @@ const CommunicationMessage: React.FC<CommunicationMessageProps> = ({
 
     <li
       className={`my-message ${
-        name !== "kaem" && name !== "admin" && "other-user-message"
+        name !== loggedUser && name !== "admin" && "other-user-message"
       } ${name === "admin" && "admin-user-message"}`}
     >
       <p className="text-sm text-gray-900">{content}</p>

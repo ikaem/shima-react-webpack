@@ -1,37 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
+import MessagesProvider from "./contexts/messages.context";
 
-import Header from "./containers/header.container";
-import Communication from "./containers/communication.container";
-import Contacts from "./containers/contacts.container";
+import Layout from "./components/layout.component";
+
+import Join from "./pages/join.page";
+import Chat from "./pages/chat.page";
 import { Switch, Route } from "react-router-dom";
 
 const App: React.FC = () => {
+  const [loggedUser, setLoggedUser] = useState<string>("");
+
   return (
-    <>
-      <div className="green-ribbon fixed bg-teal-500 h-32 w-full top-0" />
-      <div className="app-container grid grid-cols-app-mobile sm:grid-cols-app-desktop grid-rows-app mx-auto max-w-screen-xl w-full relative bg-gray-200 xl:my-5 h-screen">
-        <Header />
-
-        <Switch>
-          <Route path="/room/:id">
-            <Communication />
-          </Route>
-          <Route path="/" exact>
-            <h1>Create room</h1>
-          </Route>
-        </Switch>
-        <Contacts />
-      </div>
-
-      {/* <Switch>
-        <Route path="/" exact>
-          <h1>Hello</h1>
+    <Layout>
+      <Switch>
+        <Route path="/join" exact>
+          <Join setLoggedUser={setLoggedUser} />
         </Route>
-        <Route path="/me" exact>
-          <h1>Hello me</h1>
+        <Route path="/chat">
+          <MessagesProvider loggedUser={loggedUser}>
+            <Chat />
+          </MessagesProvider>
         </Route>
-      </Switch> */}
-    </>
+      </Switch>
+    </Layout>
   );
 };
 
