@@ -1,6 +1,9 @@
 {
   "name": "shima",
   "version": "0.0.1",
+  "engines": {
+    "node": "10.x"
+  },
   "scripts": {
     "start": "npm run build-css && webpack-dev-server --env.ENVIRONMENT=development",
     "build": "npm run build-css && webpack --env.ENVIRONMENT=production --mode production",
