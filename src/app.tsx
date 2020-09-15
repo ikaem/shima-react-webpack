@@ -5,7 +5,7 @@ import Layout from "./components/layout.component";
 
 import Join from "./pages/join.page";
 import Chat from "./pages/chat.page";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 const App: React.FC = () => {
   const [loggedUser, setLoggedUser] = useState<string>("");
@@ -21,6 +21,7 @@ const App: React.FC = () => {
             <Chat />
           </MessagesProvider>
         </Route>
+        {!loggedUser && <Redirect to="/join" />}
       </Switch>
     </Layout>
   );

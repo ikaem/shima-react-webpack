@@ -15,7 +15,15 @@ const JoinRoom: React.FC = () => {
     }>;
   };
 
-  const [joinedRoomRoute, setJoinedRoomRoute] = useState<string>("");
+  const [isJoined, setIsJoined] = useState<{
+    status: boolean;
+    message: string;
+    joinedRoomRoute: string;
+  }>({
+    status: false,
+    message: "",
+    joinedRoomRoute: "",
+  });
 
   const handleJoinedRoomSubmit = async (
     e: React.FormEvent<HTMLFormElement>
@@ -23,7 +31,6 @@ const JoinRoom: React.FC = () => {
     e.preventDefault();
 
     // check if input empty
-
     if (!(joinedRoomInputRef.current as HTMLInputElement).value) return;
 
     const {
@@ -36,17 +43,24 @@ const JoinRoom: React.FC = () => {
       error: string;
     };
 
-    console.log("this is error:", error)
+    // if error, we just want to show the message
 
-    if (error) return console.log("there is error", error);
+    if (error) {
+      console.log("there is error", error);
+      setIsJoined({
+        status: false,
+        message: error,
+        joinedRoomRoute: "",
+      });
+      return;
+    }
 
-    console.log("this is room name:", roomName)
-
-    setJoinedRoomRoute(roomName);
-
-    // console.log("here is the response", response);
-
-    // reroute to the actual new room
+    // reroute to the actual joined room
+    setIsJoined({
+      status: true,
+      message: "",
+      joinedRoomRoute: roomName,
+    });
   };
 
   return (
@@ -68,12 +82,14 @@ const JoinRoom: React.FC = () => {
           Join
         </button>
       </form>
-      {/* {isUserJoined.errorMessage && (
-            <p className="mt-8 px-4 text-center text-orange-900">
-              {isUserJoined.errorMessage}
-            </p>
-          )} */}
-      {joinedRoomRoute && <Redirect to={`/chat/room/${joinedRoomRoute}`} />}
+      {isJoined.message && (
+        <p className="mt-8 px-4 text-center text-orange-900">
+          {isJoined.message}
+        </p>
+      )}
+      {isJoined.status && (
+        <Redirect to={`/chat/room/${isJoined.joinedRoomRoute}`} />
+      )}
     </div>
   );
 };

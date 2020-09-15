@@ -11,16 +11,13 @@ const CommunicationMessage: React.FC<CommunicationMessageProps> = ({
   content,
   loggedUser,
 }) => {
-  // console.log(name);
-
   return (
-    // <li className="message-list_message-item">
-
     <li
       className={`my-message ${
         name !== loggedUser && name !== "admin" && "other-user-message"
       } ${name === "admin" && "admin-user-message"}`}
     >
+      <span className={`text-gray-600 mb-2 font-semibold ${loggedUser === name && "text-right"}`}>{name}</span>
       <p className="text-sm text-gray-900">{content}</p>
       <div className="text-xs mt-2 self-end text-gray-600 flex place-items-center">
         <span className="">{"22/08/2020"}</span>

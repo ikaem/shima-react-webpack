@@ -14,36 +14,27 @@ const Communication: React.FC = () => {
     []
   );
 
-  const { getRoomMessages } = useContext(MessagesContext) as {
-    getRoomMessages: () => { room: string; name: string; content: string }[];
-  };
-
-  const { getRoomMessagesObject } = useContext(MessagesContext) as {
+  const { loggedUser, sendMessage, getRoomMessagesObject } = useContext(
+    MessagesContext
+  ) as {
+    loggedUser: string;
+    sendMessage: (a: string, b: string) => void;
     getRoomMessagesObject: (a: string) => { name: string; content: string }[];
   };
 
-  const { sendMessage } = useContext(MessagesContext) as {
-    sendMessage: (a: string, b: string) => void;
-  };
-
-  const { loggedUser } = useContext(MessagesContext) as { loggedUser: string }
-
   useEffect(() => {
+    // setting messages for indivual conversation
     try {
-      // console.log("hello", getRoomMessagesObject(id));
       setMessages(getRoomMessagesObject(id));
     } catch (error) {
+      // make sure the error if is just logged if we jump to a particular conversation via url
       console.log(error);
     }
-
-    // setMessages(getRoomMessagesObject(id));
   }, [id, getRoomMessagesObject]);
 
   const handleNewMessage = (e: React.KeyboardEvent<HTMLFormElement>) => {
     if (e.charCode !== 13 || !newMessageRef.current) return;
     e.preventDefault();
-    // console.log(newMessageRef.current.value);
-
 
     sendMessage(id, newMessageRef.current.value);
     (newMessageRef.current as HTMLTextAreaElement).value = "";
@@ -52,11 +43,9 @@ const Communication: React.FC = () => {
   return (
     <main className="row-span-2 flex flex-col h-full">
       <CommunicationHeader roomName={id} />
-
       <div className="custom-scrollbar overflow-y-scroll bg-message-box-pattern h-full w-full p-4">
         <ul className="w-full flex flex-col justify-start sm:w-10/12 sm:mx-auto">
           {messages.map((val, index) => {
-            // console.log("this is messages:", messages);
             return (
               <CommunicationMessage
                 name={val.name}
@@ -68,7 +57,6 @@ const Communication: React.FC = () => {
           })}
         </ul>
       </div>
-
       <CommunicationNewMessage
         newMessageRef={newMessageRef}
         handleNewMessage={handleNewMessage}
