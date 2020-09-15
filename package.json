@@ -5,11 +5,11 @@
     "node": "10.x"
   },
   "scripts": {
-    "start": "npm run build-css && webpack-dev-server --env.ENVIRONMENT=development",
+    "start-dev": "npm run build-css && webpack-dev-server --env.ENVIRONMENT=development",
     "build": "npm run build-css && webpack --env.ENVIRONMENT=production --mode production",
     "build-css": "postcss src/assets/styles/styles.css -o src/assets/styles/main.css",
-    "start-server": "node server.js",
-    "heroku-postbuild": "npm run build && tsc server.ts && npm run start-server"
+    "start": "node server.js",
+    "heroku-postbuild": "npm run build && tsc server.ts"
   },
   "dependencies": {
     "@types/react-router-dom": "^5.1.5",
