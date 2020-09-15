@@ -10,6 +10,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 const App: React.FC = () => {
   const [loggedUser, setLoggedUser] = useState<string>("");
 
+
   return (
     <Layout>
       <Switch>

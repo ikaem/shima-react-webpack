@@ -2,8 +2,8 @@
   "name": "shima",
   "version": "0.0.1",
   "scripts": {
-    "start": "npm run build-css && webpack-dev-server",
-    "build": "npm run build-css && webpack --mode production",
+    "start": "npm run build-css && webpack-dev-server --env.ENVIRONMENT=development",
+    "build": "npm run build-css && webpack --env.ENVIRONMENT=production --mode production",
     "build-css": "postcss src/assets/styles/styles.css -o src/assets/styles/main.css"
   },
   "dependencies": {
@@ -33,6 +33,7 @@
     "autoprefixer": "^9.8.6",
     "babel-loader": "^8.1.0",
     "css-loader": "^4.3.0",
+    "dotenv": "^8.2.0",
     "eslint": "^7.8.1",
     "eslint-plugin-react": "^7.20.6",
     "eslint-plugin-react-hooks": "^4.1.0",
