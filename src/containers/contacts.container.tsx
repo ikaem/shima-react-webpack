@@ -20,20 +20,11 @@ const Contacts: React.FC = () => {
     setCommObjectRead: (a: string) => void;
   };
 
-  // console.log("comm list:", communicationList)
 
   return (
     <div className="bg-white custom-scrollbar overflow-y-scroll px-4">
       <ul className="w-full">
-        {/* {new Array(6).fill("").map((val, index) => (
-          <ContactItem key={index} />
-        ))} */}
         {communicationList.map((val, index) => {
-          // const room = val.room;
-          // const content = val.lastMessage.content;
-          // const author = val.lastMessage.author
-
-          // console.log("rendering room:", val.room, "which is seen:", val.seen);
 
           return (
             <ContactItem

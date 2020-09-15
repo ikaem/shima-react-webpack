@@ -15,18 +15,21 @@ const NewRoom: React.FC = () => {
     }>;
   };
 
-  const [newRoomRoute, setNewRoomRoute] = useState<string>("");
+  const [isCreated, setIsCreated] = useState<{
+    status: boolean;
+    message: string;
+    createdRoomRoute: string;
+  }>({
+    status: false,
+    message: "",
+    createdRoomRoute: "",
+  });
 
   const handleNewRoomSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // check if input empty
-
     if (!(newRoomInputRef.current as HTMLInputElement).value) return;
-
-    // try {
-    // } catch (error) {}
-    // call function here
 
     const {
       roomName,
@@ -38,13 +41,23 @@ const NewRoom: React.FC = () => {
       error: string;
     };
 
-    if (error) return console.log("there is error", error);
+    // if error, we just want to show the message
+    if (error) {
+      console.log("there is error", error);
+      setIsCreated({
+        status: false,
+        message: error,
+        createdRoomRoute: "",
+      });
+      return;
+    }
 
-    setNewRoomRoute(roomName);
-
-    // console.log("here is the response", response);
-
-    // reroute to the actual new room
+    // reroute to the actual joined room
+    setIsCreated({
+      status: true,
+      message: "",
+      createdRoomRoute: roomName,
+    });
   };
 
   return (
@@ -66,12 +79,14 @@ const NewRoom: React.FC = () => {
           Create room
         </button>
       </form>
-      {/* {isUserJoined.errorMessage && (
-            <p className="mt-8 px-4 text-center text-orange-900">
-              {isUserJoined.errorMessage}
-            </p>
-          )} */}
-      {newRoomRoute && <Redirect to={`/chat/room/${newRoomRoute}`} />}
+      {isCreated.message && (
+        <p className="mt-8 px-4 text-center text-orange-900">
+          {isCreated.message}
+        </p>
+      )}
+      {isCreated.status && (
+        <Redirect to={`/chat/room/${isCreated.createdRoomRoute}`} />
+      )}
     </div>
   );
 };

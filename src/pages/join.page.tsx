@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import { Redirect } from "react-router-dom";
 
+import { httpJoinChat } from "../services/http.service";
+
 interface JoinProps {
   setLoggedUser: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -19,23 +21,8 @@ const Join: React.FC<JoinProps> = ({ setLoggedUser }) => {
 
     const { value } = loginInputRef.current as HTMLInputElement;
 
-    // manual fetch call
-
     try {
-      const joinPromise = await fetch("http://localhost:5000" + "/join", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username: value.trim() }),
-      }).then((joinResponse) => joinResponse.json());
-
-      const { username, message } = (await joinPromise) as {
-        username: string;
-        message: string;
-      };
-
-      console.log("this username", username, message);
+      const { username, message } = await httpJoinChat(value);
 
       if (message === "This username is taken")
         return setIsUserJoined({
@@ -50,7 +37,6 @@ const Join: React.FC<JoinProps> = ({ setLoggedUser }) => {
         errorMessage: message,
       });
     } catch (error) {
-      console.log("this is error:", error);
       setIsUserJoined({
         status: false,
         errorMessage:
@@ -83,7 +69,7 @@ const Join: React.FC<JoinProps> = ({ setLoggedUser }) => {
           {isUserJoined.errorMessage}
         </p>
       )}
-      {isUserJoined.status && <Redirect to="/chat" />}
+      {isUserJoined.status && <Redirect to="/chat/room/lobby" />}
     </div>
   );
 };
