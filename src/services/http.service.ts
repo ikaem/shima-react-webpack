@@ -1,4 +1,5 @@
-const ENDPOINT = "http://localhost:5000";
+// const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = process.env.API_ENDPOINT as string;
 
 export const httpJoinChat = async (
   username: string

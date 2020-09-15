@@ -1,11 +1,9 @@
 import path from "path";
 import webpack from "webpack";
 import webpackDevServer from "webpack-dev-server";
-
 import fs from "fs";
 
 import dotenv from "dotenv";
-
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 
 const config = (env: NodeJS.ProcessEnv): webpack.Configuration => {
@@ -29,8 +27,6 @@ const config = (env: NodeJS.ProcessEnv): webpack.Configuration => {
   const enver = dotenv.config({
     path: finalPath,
   }).parsed as { [name: string]: string };
-
-  console.log("modeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:", finalPath);
 
   // const enver = dotenv.config().parsed as { [name: string]: string };
 

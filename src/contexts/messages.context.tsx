@@ -149,7 +149,8 @@ const MessagesProvider: React.FC<MessagesProvideProps> = ({
 
   useEffect(() => {
     // connect to socket io backend
-    socketRef.current = io.connect("localhost:5000");
+    // socketRef.current = io.connect("localhost:5000");
+    socketRef.current = io.connect(process.env.API_ENDPOINT as string);
     joinRoom("lobby");
 
     return () => {
