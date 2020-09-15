@@ -2,17 +2,16 @@
 exports.__esModule = true;
 /* eslint @typescript-eslint/no-var-requires: "off" */
 var express = require("express");
-var path_1 = require("path");
+var path = require("path");
 var PORT = process.env.PORT || 8500;
 var app = express();
-// NOW WE set to use current directory from where the script is running
-// app.use(express.static(__dirname));
-app.use(express.static(path_1.join(__dirname, "build"), { index: false }));
-
+// NOW WE set to a directory from which we will server static files. in this case, it is build folder
+app.use(express.static(path.join(__dirname, "build"), { index: false }));
+app.use(express.static(path.join(__dirname, "public"), { index: false }));
 // send user to index.html despite the url
 app.get("*", function (req, res) {
-  res.sendFile(path_1.resolve(__dirname, "build/index.html"));
+    res.sendFile(path.resolve(__dirname, "./public/index.html"));
 });
 app.listen(PORT, function () {
-  console.log("listening on port", PORT);
+    console.log("listening on port", PORT);
 });

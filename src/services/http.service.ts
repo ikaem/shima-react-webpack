@@ -7,7 +7,7 @@ export const httpJoinChat = async (
   username: string;
   message: string;
 }> => {
-  const joinPromise = await fetch(ENDPOINT + "/join", {
+  const joinPromise = await fetch(ENDPOINT + "join", {
     method: "post",
     headers: {
       "Content-Type": "application/json",
