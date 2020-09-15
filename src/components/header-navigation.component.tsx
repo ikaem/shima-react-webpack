@@ -5,7 +5,7 @@ const HeaderNavigation: React.FC = () => {
   return (
     <nav className="flex flex-col sm:flex-row sm:h-16 items-center px-4 pt-3 sm:pt-0 justify-between">
       <Link to="/chat/room/lobby" className="w-10 h-10 rounded-full overflow-hidden">
-        <img src="https://via.placeholder.com/100" alt="" className="w-full" />
+        <img src="https://source.unsplash.com/105x105/?portrait" alt="" className="w-full" />
       </Link>
       <Link title="Join a room" to="/chat/join-room" className="mt-4 sm:my-4 sm:ml-auto  text-gray-600">
         <svg
