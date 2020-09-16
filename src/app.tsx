@@ -10,7 +10,6 @@ import { Switch, Route, Redirect } from "react-router-dom";
 const App: React.FC = () => {
   const [loggedUser, setLoggedUser] = useState<string>("");
 
-
   return (
     <Layout>
       <Switch>
@@ -18,6 +17,7 @@ const App: React.FC = () => {
           <Join setLoggedUser={setLoggedUser} />
         </Route>
         <Route path="/chat">
+          {!loggedUser && <Redirect to="/join" />}
           <MessagesProvider loggedUser={loggedUser}>
             <Chat />
           </MessagesProvider>

@@ -284,7 +284,7 @@ const MessagesProvider: React.FC<MessagesProvideProps> = ({
       );
   }, []);
 
-  if (!loggedUser) return <Redirect to="/join" />;
+  // if (!loggedUser) return <Redirect to="/join" />;
 
   return (
     <MessagesContext.Provider

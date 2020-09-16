@@ -75,7 +75,7 @@ const config = (env: NodeJS.ProcessEnv): webpack.Configuration => {
       filename: "bundle.js",
     },
     devServer: {
-      contentBase: path.join(__dirname, "build"),
+      contentBase: path.join(__dirname, "public"),
       compress: true,
       port: 4000,
       historyApiFallback: true,
