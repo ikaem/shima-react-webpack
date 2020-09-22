@@ -43,7 +43,7 @@ const Join: React.FC<JoinProps> = ({ setLoggedUser }) => {
         className="flex flex-col w-8/12 px-4 mx-auto items-center h-32 justify-between"
       >
         <label htmlFor="" className="">
-          Choose your username:
+          Choose yours username:
         </label>
         <input
           type="text"
