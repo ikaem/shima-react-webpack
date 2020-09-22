@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef, createContext } from "react";
 import io from "socket.io-client";
 import { Redirect } from "react-router-dom";
+import { query } from "express";
 
 export const MessagesContext = createContext<{
   loggedUser: string;
-  getRoomMessagesObject: (a: string) => { name: string; content: string }[];
+  getRoomMessages: (a: string) => { name: string; content: string }[] | [];
   setCommObjectRead: (a: string) => void;
   sendMessage: (a: string, b: string) => void;
   addNewRoom: (
@@ -25,7 +26,8 @@ export const MessagesContext = createContext<{
       }
     | undefined
   >;
-  communicationList: {
+
+  generateCommunicationList: () => {
     room: string;
     seen: boolean;
     lastMessage: {
@@ -33,6 +35,15 @@ export const MessagesContext = createContext<{
       content: string;
     };
   }[];
+
+  // communicationList: {
+  //   room: string;
+  //   seen: boolean;
+  //   lastMessage: {
+  //     author: string;
+  //     content: string;
+  //   };
+  // }[];
 } | null>(null);
 
 interface MessagesProvideProps {
@@ -44,9 +55,10 @@ const MessagesProvider: React.FC<MessagesProvideProps> = ({
   children,
   loggedUser,
 }) => {
-  console.log("just testing env:", process.env.API_ENDPOINT);
-
   const socketRef = useRef<SocketIOClient.Socket>();
+
+  // setting state for able to use chat
+  const [canUseChat, setCanUseChat] = useState<boolean>(true);
 
   // setting state for communication objects...
   const [communicationObjects, setCommunicationObjects] = useState<
@@ -80,7 +92,20 @@ const MessagesProvider: React.FC<MessagesProvideProps> = ({
     });
   };
 
-  const getRoomMessagesObject = (room: string) => {
+  const generateCommunicationList = () => {
+    return communicationObjects.map((commObj) => {
+      return {
+        room: commObj.room,
+        seen: commObj.seen,
+        lastMessage: {
+          author: commObj.messages[commObj.messages.length - 1].name,
+          content: commObj.messages[commObj.messages.length - 1].content,
+        },
+      };
+    });
+  };
+
+  const getRoomMessages = (room: string) => {
     const roomMessages = communicationObjects.find((object) => {
       return object.room === room;
     }) as {
@@ -92,7 +117,8 @@ const MessagesProvider: React.FC<MessagesProvideProps> = ({
       }[];
     };
 
-    return roomMessages.messages;
+    // return roomMessages.messages;
+    return roomMessages?.messages || [];
   };
 
   const sendMessage = (room: string, message: string) => {
@@ -142,7 +168,7 @@ const MessagesProvider: React.FC<MessagesProvideProps> = ({
       )
     );
 
-    console.log("error joining room:", joinResponse);
+    // console.log("error joining room:", joinResponse);
 
     return joinResponse;
   };
@@ -150,8 +176,15 @@ const MessagesProvider: React.FC<MessagesProvideProps> = ({
   useEffect(() => {
     // connect to socket io backend
     // socketRef.current = io.connect("localhost:5000");
-    socketRef.current = io.connect(process.env.API_ENDPOINT as string);
-    joinRoom("lobby");
+
+    if (!loggedUser) return setCanUseChat(false);
+
+    socketRef.current = io.connect(process.env.API_ENDPOINT as string, {
+      query: { username: loggedUser },
+    });
+    joinRoom("lobby").then((data) => {
+      if (data?.error) return setCanUseChat(false);
+    });
 
     return () => {
       socketRef.current?.emit("disconnect", { name: loggedUser });
@@ -269,42 +302,43 @@ const MessagesProvider: React.FC<MessagesProvideProps> = ({
         }
       );
 
-    socketRef.current &&
-      socketRef.current.on(
-        "adminMessage",
-        (data: {
-          room: string;
-          message: {
-            name: string;
-            content: string;
-          };
-        }) => {
-          addToCommunicationObjects(data.room, data.message);
-        }
-      );
+    // socketRef.current &&
+    socketRef.current?.on(
+      "adminMessage",
+      (data: {
+        room: string;
+        message: {
+          name: string;
+          content: string;
+        };
+      }) => {
+        addToCommunicationObjects(data.room, data.message);
+      }
+    );
   }, []);
 
-  // if (!loggedUser) return <Redirect to="/join" />;
+  if (!canUseChat) return <Redirect to="/join" />;
 
   return (
     <MessagesContext.Provider
       value={{
-        getRoomMessagesObject,
+        getRoomMessages,
         sendMessage,
         setCommObjectRead,
         addNewRoom,
         joinRoom,
         loggedUser,
-        communicationList: communicationObjects.map((commObj) => {
-          return {
-            room: commObj.room,
-            seen: commObj.seen,
-            lastMessage: {
-              author: commObj.messages[commObj.messages.length - 1].name,
-              content: commObj.messages[commObj.messages.length - 1].content,
-            },
-          };
-        }),
+        generateCommunicationList,
+        // communicationList: communicationObjects.map((commObj) => {
+        //   return {
+        //     room: commObj.room,
+        //     seen: commObj.seen,
+        //     lastMessage: {
+        //       author: commObj.messages[commObj.messages.length - 1].name,
+        //       content: commObj.messages[commObj.messages.length - 1].content,
+        //     },
+        //   };
+        // }),
       }}
     >
       {children}
