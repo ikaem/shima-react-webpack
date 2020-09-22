@@ -10,7 +10,7 @@ const CommunicationHeader: React.FC<CommunicationHeaderProps> = ({
   return (
     <header className="px-4 py-2 border-l min-h-comm-header-height flex items-center">
       <a href="#" className="w-10 h-10 rounded-full overflow-hidden">
-        <img src="https://via.placeholder.com/100" alt="" className="w-full" />
+        <img src="https://source.unsplash.com/100x100/?portrait" alt="" className="w-full" />
       </a>
 
       <div className="flex flex-col justify-center ml-4">
@@ -22,8 +22,8 @@ const CommunicationHeader: React.FC<CommunicationHeaderProps> = ({
         <label htmlFor="" className="" hidden>
           Search
         </label>
-        <input type="search" className="hidden" />
-        <button className="">
+        <input type="search" className="hidden" disabled/>
+        <button disabled className="">
           <svg
             className="w-6 h-6 relative text-gray-500"
             fill="none"

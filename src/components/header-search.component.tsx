@@ -9,8 +9,9 @@ const HeaderSearch: React.FC = () => {
       <input
         type="search"
         className="w-full rounded-tr-app-search rounded-br-app-search h-8 outline-none"
+        disabled
       />
-      <button className="bg-white h-8 rounded-tl-app-search rounded-bl-app-search pl-2 relative">
+      <button disabled className="bg-white h-8 rounded-tl-app-search rounded-bl-app-search pl-2 relative">
         <svg
           className="h-6 w-6 relative text-gray-500"
           fill="none"

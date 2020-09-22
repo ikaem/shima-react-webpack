@@ -1,4 +1,5 @@
-const ENDPOINT = "http://localhost:5000";
+// const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = process.env.API_ENDPOINT as string;
 
 export const httpJoinChat = async (
   username: string
@@ -6,7 +7,7 @@ export const httpJoinChat = async (
   username: string;
   message: string;
 }> => {
-  const joinPromise = await fetch(ENDPOINT + "/join", {
+  const joinPromise = await fetch(ENDPOINT + "join", {
     method: "post",
     headers: {
       "Content-Type": "application/json",
@@ -19,7 +20,6 @@ export const httpJoinChat = async (
     message: string;
   };
 
+
   return response;
 };
-
-export {};

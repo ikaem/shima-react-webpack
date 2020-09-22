@@ -17,6 +17,7 @@ const App: React.FC = () => {
           <Join setLoggedUser={setLoggedUser} />
         </Route>
         <Route path="/chat">
+          {!loggedUser && <Redirect to="/join" />}
           <MessagesProvider loggedUser={loggedUser}>
             <Chat />
           </MessagesProvider>

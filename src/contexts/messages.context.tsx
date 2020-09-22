@@ -44,10 +44,7 @@ const MessagesProvider: React.FC<MessagesProvideProps> = ({
   children,
   loggedUser,
 }) => {
-
-console.log("just testing logged user...", loggedUser)
-
-
+  console.log("just testing env:", process.env.API_ENDPOINT);
 
   const socketRef = useRef<SocketIOClient.Socket>();
 
@@ -152,13 +149,14 @@ console.log("just testing logged user...", loggedUser)
 
   useEffect(() => {
     // connect to socket io backend
-    socketRef.current = io.connect("localhost:5000");
+    // socketRef.current = io.connect("localhost:5000");
+    socketRef.current = io.connect(process.env.API_ENDPOINT as string);
     joinRoom("lobby");
 
     return () => {
-      socketRef.current?.emit("disconnect", { name: loggedUser } );
-      socketRef.current?.disconnect()
-    }
+      socketRef.current?.emit("disconnect", { name: loggedUser });
+      socketRef.current?.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -286,7 +284,7 @@ console.log("just testing logged user...", loggedUser)
       );
   }, []);
 
-  if(!loggedUser) return <Redirect to="/join"/>
+  // if (!loggedUser) return <Redirect to="/join" />;
 
   return (
     <MessagesContext.Provider

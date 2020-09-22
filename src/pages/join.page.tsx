@@ -37,6 +37,7 @@ const Join: React.FC<JoinProps> = ({ setLoggedUser }) => {
         errorMessage: message,
       });
     } catch (error) {
+      console.log(error)
       setIsUserJoined({
         status: false,
         errorMessage:

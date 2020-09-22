@@ -28,7 +28,7 @@ const ContactItem: React.FC<ContactItemProps> = ({
       <li className="flex justify-start py-4 border-b w-full">
         <div className="w-12">
           <img
-            src="https://via.placeholder.com/100"
+            src="https://source.unsplash.com/100x100/?portrait"
             alt=""
             className="w-full rounded-full"
           />
