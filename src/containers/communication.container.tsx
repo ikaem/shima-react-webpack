@@ -10,30 +10,32 @@ import { MessagesContext } from "../contexts/messages.context";
 const Communication: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const newMessageRef = useRef<HTMLTextAreaElement>(null);
-  const [messages, setMessages] = useState<{ name: string; content: string }[]>(
-    []
-  );
+  // const [messages, setMessages] = useState<{ name: string; content: string }[]>(
+  //   []
+  // );
 
-  const { loggedUser, sendMessage, getRoomMessagesObject } = useContext(
+  const { loggedUser, sendMessage, getRoomMessages } = useContext(
     MessagesContext
   ) as {
     loggedUser: string;
     sendMessage: (a: string, b: string) => void;
-    getRoomMessagesObject: (a: string) => { name: string; content: string }[];
+    getRoomMessages: (a: string) => { name: string; content: string }[];
   };
 
-  useEffect(() => {
-    // setting messages for indivual conversation
-    try {
-      setMessages(getRoomMessagesObject(id));
-    } catch (error) {
-      // make sure the error if is just logged if we jump to a particular conversation via url
-      console.log(error);
-    }
-  }, [id, getRoomMessagesObject]);
+  // useEffect(() => {
+  //   // setting messages for indivual conversation
+  //   try {
+  //     setMessages(getRoomMessagesObject(id));
+  //   } catch (error) {
+  //     // make sure the error if is just logged if we jump to a particular conversation via url
+  //     console.log(error);
+  //   }
+  // }, [id, getRoomMessagesObject]);
 
   const handleNewMessage = (e: React.KeyboardEvent<HTMLFormElement>) => {
-    if (e.charCode !== 13 || !newMessageRef.current) return;
+    if (e.key !== "Enter" || !newMessageRef.current) return;
+
+    // console.log(e.key);
     e.preventDefault();
 
     sendMessage(id, newMessageRef.current.value);
@@ -45,7 +47,8 @@ const Communication: React.FC = () => {
       <CommunicationHeader roomName={id} />
       <div className="custom-scrollbar overflow-y-scroll bg-message-box-pattern h-full w-full p-4">
         <ul className="w-full flex flex-col justify-start sm:w-10/12 sm:mx-auto">
-          {messages.map((val, index) => {
+          {/* {messages.map((val, index) => { */}
+          {getRoomMessages(id).map((val, index) => {
             return (
               <CommunicationMessage
                 name={val.name}

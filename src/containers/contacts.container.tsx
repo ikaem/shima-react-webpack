@@ -5,8 +5,22 @@ import ContactItem from "../components/contact-item.component";
 import { MessagesContext } from "../contexts/messages.context";
 
 const Contacts: React.FC = () => {
-  const { communicationList } = useContext(MessagesContext) as {
-    communicationList: {
+  // const { communicationList } = useContext(MessagesContext) as {
+  //   communicationList: {
+  //     room: string;
+  //     seen: boolean;
+  //     lastMessage: {
+  //       author: string;
+  //       content: string;
+  //     };
+  //   }[];
+  // };
+
+  const { setCommObjectRead, generateCommunicationList } = useContext(
+    MessagesContext
+  ) as {
+    setCommObjectRead: (a: string) => void;
+    generateCommunicationList: () => {
       room: string;
       seen: boolean;
       lastMessage: {
@@ -16,16 +30,10 @@ const Contacts: React.FC = () => {
     }[];
   };
 
-  const { setCommObjectRead } = useContext(MessagesContext) as {
-    setCommObjectRead: (a: string) => void;
-  };
-
-
   return (
     <div className="bg-white custom-scrollbar overflow-y-scroll px-4">
       <ul className="w-full">
-        {communicationList.map((val, index) => {
-
+        {generateCommunicationList().map((val, index) => {
           return (
             <ContactItem
               setCommObjectRead={setCommObjectRead}

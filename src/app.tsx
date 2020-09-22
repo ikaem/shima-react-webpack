@@ -16,14 +16,14 @@ const App: React.FC = () => {
         <Route path="/join" exact>
           <Join setLoggedUser={setLoggedUser} />
         </Route>
-        {loggedUser && (
-          <Route path="/chat">
-            <MessagesProvider loggedUser={loggedUser}>
-              <Chat />
-            </MessagesProvider>
-          </Route>
-        )}
-        {!loggedUser && <Redirect to="/join" />}
+        <Route path="/chat">
+          <MessagesProvider loggedUser={loggedUser}>
+            <Chat />
+          </MessagesProvider>
+        </Route>
+        <Route>
+          <Redirect to="/join" />
+        </Route>
       </Switch>
     </Layout>
   );

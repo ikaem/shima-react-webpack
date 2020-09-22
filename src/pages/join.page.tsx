@@ -10,40 +10,30 @@ interface JoinProps {
 const Join: React.FC<JoinProps> = ({ setLoggedUser }) => {
   const loginInputRef = useRef<HTMLInputElement>(null);
   const [isUserJoined, setIsUserJoined] = useState<{
-    status: boolean;
+    isJoined: boolean;
     errorMessage?: string;
-  }>({ status: false });
+  }>({ isJoined: false });
 
   const handleJoin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsUserJoined({ isJoined: false });
 
     if (!(loginInputRef.current as HTMLInputElement).value) return;
 
     const { value } = loginInputRef.current as HTMLInputElement;
 
-    try {
-      const { username, message } = await httpJoinChat(value);
+    const { username, message } = await httpJoinChat(value);
 
-      if (message === "This username is taken")
-        return setIsUserJoined({
-          status: false,
-          errorMessage: message,
-        });
-
-      setLoggedUser(username);
-
-      setIsUserJoined({
-        status: true,
+    if (message)
+      return setIsUserJoined({
+        isJoined: false,
         errorMessage: message,
       });
-    } catch (error) {
-      console.log(error)
-      setIsUserJoined({
-        status: false,
-        errorMessage:
-          "There was an issue joining the chat. Please refresh the page and try again.",
-      });
-    }
+
+    setLoggedUser(username);
+    setIsUserJoined({
+      isJoined: true,
+    });
   };
 
   return (
@@ -70,9 +60,37 @@ const Join: React.FC<JoinProps> = ({ setLoggedUser }) => {
           {isUserJoined.errorMessage}
         </p>
       )}
-      {isUserJoined.status && <Redirect to="/chat/room/lobby" />}
+      {isUserJoined.isJoined && <Redirect to="/chat/room/lobby" />}
     </div>
   );
 };
 
 export default Join;
+
+/* 
+
+    try {
+      const { username, message } = await httpJoinChat(value);
+
+      // if (message === "This username is taken")
+      if (message)
+        return setIsUserJoined({
+          isJoined: false,
+          errorMessage: message,
+        });
+
+      setLoggedUser(username);
+      setIsUserJoined({
+        isJoined: true,
+        // errorMessage: message,
+      });
+    } catch (error) {
+      console.log(error)
+      setIsUserJoined({
+        isJoined: false,
+        errorMessage:
+          "There was an issue joining the chat. Please refresh the page and try again.",
+      });
+    }
+
+*/
