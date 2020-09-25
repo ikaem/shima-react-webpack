@@ -43,7 +43,6 @@ const NewRoom: React.FC = () => {
 
     // if error, we just want to show the message
     if (error) {
-      console.log("there is error", error);
       setIsCreated({
         status: false,
         message: error,
