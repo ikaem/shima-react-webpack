@@ -12,8 +12,10 @@
     "postinstall": "npm run build && tsc server.ts"
   },
   "dependencies": {
+    "@apollo/client": "^3.2.1",
     "@types/react-router-dom": "^5.1.5",
     "express": "^4.17.1",
+    "graphql": "^15.3.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",

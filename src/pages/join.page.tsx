@@ -1,11 +1,24 @@
 import React, { useRef, useState } from "react";
 import { Redirect } from "react-router-dom";
+import { gql, useMutation, useQuery } from "@apollo/client";
 
 import { httpJoinChat } from "../services/http.service";
+import { LOGGED_USER_LOCAL } from "../app";
+import { LoggedUserInterface } from "../apollo/apollo-client";
 
 interface JoinProps {
   setLoggedUser: React.Dispatch<React.SetStateAction<string>>;
 }
+
+const LOG_USER_MUTATION = gql`
+  mutation LogUserMutation($email: String!) {
+    logUser(email: $email) {
+      _id
+      name
+      email
+    }
+  }
+`;
 
 const Join: React.FC<JoinProps> = ({ setLoggedUser }) => {
   const loginInputRef = useRef<HTMLInputElement>(null);
@@ -14,25 +27,45 @@ const Join: React.FC<JoinProps> = ({ setLoggedUser }) => {
     errorMessage?: string;
   }>({ isJoined: false });
 
+  const [logUser, { client }] = useMutation<{
+    logUser: LoggedUserInterface;
+  }>(LOG_USER_MUTATION, {
+    onCompleted: (data) => {
+      console.log("here is returned data", data);
+      setLoggedUser(data.logUser.name);
+      setIsUserJoined({
+        isJoined: true,
+      });
+    },
+    onError: (error) => {
+      console.log("here is the error", error.message);
+      setIsUserJoined({
+        isJoined: false,
+        errorMessage: error.message,
+      });
+    },
+    update: (_, { data }) => {
+      client.writeQuery({
+        query: LOGGED_USER_LOCAL,
+        data: {
+          loggedUser: data?.logUser,
+        },
+      });
+    },
+  });
+
+  // testing
+  const handleLogout = () => {
+    client.resetStore();
+  };
+
   const handleJoin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsUserJoined({ isJoined: false });
 
-    if (!(loginInputRef.current as HTMLInputElement).value) return;
-
-    const { value } = loginInputRef.current as HTMLInputElement;
-
-    const { username, message } = await httpJoinChat(value);
-
-    if (message)
-      return setIsUserJoined({
-        isJoined: false,
-        errorMessage: message,
-      });
-
-    setLoggedUser(username);
-    setIsUserJoined({
-      isJoined: true,
+    logUser({
+      variables: {
+        email: (loginInputRef.current as HTMLInputElement).value,
+      },
     });
   };
 
@@ -45,6 +78,7 @@ const Join: React.FC<JoinProps> = ({ setLoggedUser }) => {
         <label htmlFor="" className="">
           Choose yours username:
         </label>
+
         <input
           type="text"
           className="rounded-lg px-4 py-2 text-center outline-none text-gray-600"
@@ -55,6 +89,11 @@ const Join: React.FC<JoinProps> = ({ setLoggedUser }) => {
           Join
         </button>
       </form>
+
+      {/* <p>{loggedUserData.loggedUser.name}</p>
+      <button disabled={!loggedUserData.loggedUser.name} onClick={handleLogout}>
+        Log out here
+      </button> */}
       {isUserJoined.errorMessage && (
         <p className="mt-8 px-4 text-center text-orange-900">
           {isUserJoined.errorMessage}

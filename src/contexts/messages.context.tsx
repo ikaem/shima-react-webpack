@@ -35,15 +35,6 @@ export const MessagesContext = createContext<{
       content: string;
     };
   }[];
-
-  // communicationList: {
-  //   room: string;
-  //   seen: boolean;
-  //   lastMessage: {
-  //     author: string;
-  //     content: string;
-  //   };
-  // }[];
 } | null>(null);
 
 interface MessagesProvideProps {
@@ -55,6 +46,8 @@ const MessagesProvider: React.FC<MessagesProvideProps> = ({
   children,
   loggedUser,
 }) => {
+  console.log("from xontext logged user", loggedUser);
+
   const socketRef = useRef<SocketIOClient.Socket>();
 
   // setting state for able to use chat
@@ -177,13 +170,15 @@ const MessagesProvider: React.FC<MessagesProvideProps> = ({
     // connect to socket io backend
     // socketRef.current = io.connect("localhost:5000");
 
+    console.log("logged user from use effect", loggedUser)
+
     if (!loggedUser) return setCanUseChat(false);
 
     socketRef.current = io.connect(process.env.API_ENDPOINT as string, {
       query: { username: loggedUser },
     });
     joinRoom("lobby").then((data) => {
-      if (data?.error) return setCanUseChat(false);
+      // if (data?.error) return setCanUseChat(false);
     });
 
     return () => {
